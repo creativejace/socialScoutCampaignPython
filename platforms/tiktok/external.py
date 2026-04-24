@@ -1,3 +1,5 @@
+import os
+
 import requests
 import json
 from post_success import push_post
@@ -14,13 +16,13 @@ def get_TikTok(post):
         endpoint = "/tt/post/info"
         params = {
             "url": post['link'],
-            "token": "vpvBnFjSneVMJtDK"
+            "token": os.getenv("ENSEMBLE_TOKEN")
         }
 
         res = requests.get(root + endpoint, params=params)
 
         TikTokJson = json.loads(res.text)
-        print("TikTok parse initiated-Amit")
+        print("TikTok parse initiated")
         try:
             # Extract statistics
             plays = TikTokJson['data'][0]['statistics']["play_count"]

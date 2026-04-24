@@ -32,8 +32,7 @@ def get_posts2(post):
 
     try:
 
-        token = get_access_token(post['platform'], post['_id'])
-        client = get_platform_client(post['platform'], token)
+        client = get_platform_client(post['platform'])
 
         client.get_stats(post)
         print(f"✅ {post['platform']} post processed")

@@ -9,9 +9,8 @@ PLATFORM_REGISTRY = {
     'shorts': ShortsClient,
     'youtube': YouTubeClient,
 } 
-
-def get_platform_client(platform_name, access_token):
-    client_class = PLATFORM_REGISTRY.get(platform_name.lower())
+def get_platform_client(platform):
+    client_class = PLATFORM_REGISTRY.get(platform.lower())
     if not client_class:
-        raise ValueError(f"Unsupported platform: {platform_name}")
-    return client_class(access_token)
+        raise ValueError(f"Unsupported platform: {platform}")
+    return client_class(platform)

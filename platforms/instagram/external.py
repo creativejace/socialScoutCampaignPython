@@ -1,3 +1,5 @@
+import os
+
 import requests
 import json
 from post_success import push_post
@@ -22,7 +24,7 @@ def get_Instagram(post):
     params = {
         "code": reel_id,
         "n_comments_to_fetch": "0",
-        "token": "vpvBnFjSneVMJtDK"
+        "token": os.getenv("ENSEMBLE_TOKEN")
     }
 
     res = requests.get(root + endpoint, params=params)
@@ -46,6 +48,7 @@ def get_Instagram(post):
             saves=saves,
             post_id=post['_id']
         )
+
     except FileNotFoundError:
         print("File not found")
     except json.decoder.JSONDecodeError:
@@ -76,7 +79,7 @@ def get_India_Instagram(post):
         params = {
             "code": reel_id,
             "n_comments_to_fetch": "0",
-            "token": "vpvBnFjSneVMJtDK"
+            "token": os.getenv("ENSEMBLE_TOKEN")
         }
 
         res = requests.get(root + endpoint, params=params)

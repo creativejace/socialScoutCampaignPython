@@ -3,14 +3,14 @@ from .youtube import YouTube
 from .external import get_youtube
 
 class YouTubeClient(BasePlatformClient):
-    def __init__(self, access_token):
-        super().__init__(access_token)
+    def __init__(self, platform: str):
+        super().__init__(platform)
 
     def get_stats(self, post):
         try:
             # Implement YouTube-specific logic to get stats using the access token and video_id
             print(f"Fetching YouTube stats for video ID: {post['_id']} ")
-            youtube = YouTube(self.access_token)
+            youtube = YouTube(post['platform'])
             stats = youtube.get_stats(post)
             return stats
         except Exception as e:

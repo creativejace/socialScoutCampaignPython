@@ -1,16 +1,20 @@
 from urllib.parse import urlparse
+
 import requests
 from typing import Dict
+
+from services.token_service import get_access_token
 
 BASE_URL = "https://graph.facebook.com/"
 
 
 class Shorts:
 
-    def __init__(self, access_token: str):
-        self.access_token = access_token
+    def __init__(self, platform: str):
+        self.platform = platform
+        self.provider = "google"
 
-    def __get(self, post) -> Dict:
+    def __get(self, post, access_token) -> Dict:
 
         url = post['link']
         parsed_url = urlparse(url)
@@ -23,7 +27,7 @@ class Shorts:
         url = f"{BASE_URL}{reel_id}/insights"
         params = {
             "metric": "impressions,reach,engagement,saved",
-            "access_token": self.access_token
+            "access_token": access_token
         }
         response = requests.get(url, params=params)
         response.raise_for_status()
@@ -31,9 +35,10 @@ class Shorts:
 
     def get_stats(self, post) -> Dict:
         try:
-            data = self.__get(post)
+            token = get_access_token(post['platform'], post['_id'])
+            data = self.__get(post, token)
             stats = {item['name']: item['values'][0]['value'] for item in data.get('data', [])}
             return stats
         except requests.RequestException as e:
-            print(f"Error fetching Instagram stats: {e}")
+            print(f"Error fetching Shorts stats: {e}")
             return {}
