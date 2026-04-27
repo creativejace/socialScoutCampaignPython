@@ -34,8 +34,29 @@ def lambda_handler(event, context):
        
        
         run_id = body.get("campaign_id")  # Replace with actual campaign ID or run ID
+        if not run_id:
+            return {
+                "statusCode": 400,
+                "headers": {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "Content-Type",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST"
+                },
+                "body": json.dumps("Missing campaign_id in request.")
+            }
         print(f"Processing campaign with run_id: {run_id}")
         campaign_details = get_campaign_with_latest_snapshot(run_id, campaigns_collection)
+        if not campaign_details:
+            return {
+                "statusCode": 404,
+                "headers": {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "Content-Type",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST"
+                },
+                "body": json.dumps(f"No campaign found for ID: {run_id}")
+            }
+
         print("Campaign details fetched successfully.")
 
         for post in campaign_details["post_details"]:
