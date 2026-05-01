@@ -23,7 +23,9 @@ client = MongoClient(connection_string)
 pointman_db = client.crypsis
 campaigns_collection = pointman_db.campaigns
 
-
+def get_campaign_by_id(campaign_id):
+    _id = ObjectId(campaign_id)
+    return campaigns_collection.find_one({"_id": _id})
 # ✅ Lambda Handler — Single Campaign Only
 def lambda_handler(event, context):
     try:
@@ -45,6 +47,18 @@ def lambda_handler(event, context):
                 "body": json.dumps("Missing campaign_id in request.")
             }
         print(f"Processing campaign with run_id: {run_id}")
+        campaign = get_campaign_by_id(run_id)
+        if not campaign:
+            return {
+                "statusCode": 404,
+                "headers": {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "Content-Type",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST"
+                },
+                "body": json.dumps(f"No campaign found for ID: {run_id}")
+            }
+
         campaign_details = get_campaign_with_latest_snapshot(run_id, campaigns_collection)
         if not campaign_details:
             return {
