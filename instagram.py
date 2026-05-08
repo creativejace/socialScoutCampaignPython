@@ -1,3 +1,5 @@
+import os
+
 import requests
 import json
 from post_success import push_post
